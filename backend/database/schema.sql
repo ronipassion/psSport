@@ -116,6 +116,10 @@ CREATE TABLE periodos (
     status ENUM('ativo','inativo') NOT NULL
 );
 
+CREATE UNIQUE INDEX uk_matricula_ativa_turma
+ON matriculas (cpf_atleta, id_turma, id_periodo);
+
+
 CREATE TABLE turmas (
     id_turma INT AUTO_INCREMENT PRIMARY KEY,
     nome VARCHAR(100),
