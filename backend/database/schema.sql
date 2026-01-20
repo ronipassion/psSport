@@ -116,6 +116,7 @@ CREATE TABLE periodos (
     status ENUM('ativo','inativo') NOT NULL
 );
 
+
 CREATE TABLE turmas (
     id_turma INT AUTO_INCREMENT PRIMARY KEY,
     nome VARCHAR(100),
@@ -150,6 +151,9 @@ CREATE TABLE matriculas (
     FOREIGN KEY (id_turma) REFERENCES turmas(id_turma),
     INDEX (cpf_atleta)
 );
+
+CREATE UNIQUE INDEX uk_matricula_ativa_turma
+ON matriculas (cpf_atleta, id_turma, id_periodo);
 
 CREATE TABLE presenca (
     id_presenca INT AUTO_INCREMENT PRIMARY KEY,
