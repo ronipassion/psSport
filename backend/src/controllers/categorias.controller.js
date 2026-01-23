@@ -1,80 +1,46 @@
-const db = require('../config/database');
+const categoriasService = require('../services/categorias.service');
 
-
-exports.createCategoria = async (req, res) => {
+exports.createCategoria = async (req, res, next) => {
   try {
-    const { nome, faixa_etaria, status } = req.body;
-
-    const [result] = await db.execute(
-      'INSERT INTO categorias (nome, faixa_etaria, data_criacao, status) VALUES (?, ?, CURDATE(), ?)',
-      [nome, faixa_etaria, status]
-    );
-
-    res.status(201).json({ id: result.insertId });
+    const categoria = await categoriasService.create(req.body);
+    res.status(201).json(categoria);
   } catch (error) {
-    res.status(500).json({ error: error.message });
+    next(error);
   }
 };
 
-
-exports.getCategorias = async (req, res) => {
+exports.getCategorias = async (req, res, next) => {
   try {
-    const [rows] = await db.execute('SELECT * FROM categorias');
-    res.json(rows);
+    const categorias = await categoriasService.getAll();
+    res.json(categorias);
   } catch (error) {
-    res.status(500).json({ error: error.message });
+    next(error);
   }
 };
 
-
-exports.getCategoriaById = async (req, res) => {
+exports.getCategoriaById = async (req, res, next) => {
   try {
-    const { id } = req.params;
-
-    const [rows] = await db.execute(
-      'SELECT * FROM categorias WHERE id_categoria = ?',
-      [id]
-    );
-
-    if (rows.length === 0) {
-      return res.status(404).json({ message: 'Categoria não encontrada' });
-    }
-
-    res.json(rows[0]);
+    const categoria = await categoriasService.getById(req.params.id);
+    res.json(categoria);
   } catch (error) {
-    res.status(500).json({ error: error.message });
+    next(error);
   }
 };
 
-
-exports.updateCategoria = async (req, res) => {
+exports.updateCategoria = async (req, res, next) => {
   try {
-    const { id } = req.params;
-    const { nome, faixa_etaria, status } = req.body;
-
-    await db.execute(
-      'UPDATE categorias SET nome = ?, faixa_etaria = ?, status = ? WHERE id_categoria = ?',
-      [nome, faixa_etaria, status, id]
-    );
-
+    await categoriasService.update(req.params.id, req.body);
     res.json({ message: 'Categoria atualizada com sucesso' });
   } catch (error) {
-    res.status(500).json({ error: error.message });
+    next(error);
   }
 };
 
-
-exports.deleteCategoria = async (req, res) => {
+exports.deleteCategoria = async (req, res, next) => {
   try {
-    const { id } = req.params;
-
-    await db.execute(
-      'DELETE FROM categorias WHERE id_categoria = ?',
-      [id]
-    );
-
+    await categoriasService.remove(req.params.id);
     res.json({ message: 'Categoria removida com sucesso' });
   } catch (error) {
-    res.status(500).json({ error: error.message });
+    next(error);
   }
 };
