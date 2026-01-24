@@ -148,7 +148,7 @@ CREATE TABLE matriculas (
     status ENUM('ativa','cancelada','concluida') NOT NULL,
     FOREIGN KEY (cpf_atleta) REFERENCES atletas(cpf_atleta),
     FOREIGN KEY (id_turma) REFERENCES turmas(id_turma),
-    INDEX (cpf_atleta)
+    UNIQUE INDEX (cpf_atleta)
 );
 
 CREATE TABLE presenca (
